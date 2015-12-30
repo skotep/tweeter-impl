@@ -11,7 +11,8 @@ var favicon = require('static-favicon');
 
 var Tweet = require('./app_server/db.js').Tweet
 
-require('./app_server/twitter.js').listen(Tweet)
+var twitter = require('./app_server/twitter.js')
+twitter.setup(Tweet)
 
 var app = express()
 app.use(favicon(__dirname + '/static/favicon.ico'));
@@ -21,6 +22,7 @@ app.disable('x-powered-by')
 
 app.put('/tweet', bodyParser.json(), putTweet)
 app.get('/tweet/:page*?', getTweet)
+app.put('/reset', twitter.reset)
 
 function putTweet(req, res) {
 	var payload = req.body
