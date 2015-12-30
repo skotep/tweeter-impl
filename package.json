@@ -17,6 +17,7 @@
     "mongoose": "^4.3.4",
     "morgan": "^1.6.1",
     "msx": "^0.4.1",
+    "static-favicon": "^1.0.2",
     "twit": "^2.1.1"
   },
   "devDependencies": {

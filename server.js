@@ -7,13 +7,14 @@ if (process.env.NODE_ENV !== "production") {
 var express = require('express')
 var bodyParser = require('body-parser')
 var logger  = require('morgan')
+var favicon = require('static-favicon');
 
 var Tweet = require('./app_server/db.js').Tweet
 
 require('./app_server/twitter.js').listen(Tweet)
 
 var app = express()
-
+app.use(favicon(__dirname + '/static/favicon.ico'));
 app.use(logger('dev'))
 app.use(express.static(__dirname + '/static'))
 app.disable('x-powered-by')
