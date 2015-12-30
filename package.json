@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "watchify -t mithrilify app/*.js -o static/app-browserified.js -d -v",
-    "start": "npm run watch & node server.js"
+    "start": "npm run watch & node server.js",
+    "push": "npm run watch & git push heroku master"
   },
   "author": "Scott Pollack",
   "license": "MIT",
