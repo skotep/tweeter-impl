@@ -2,7 +2,7 @@ var express = require('express')
 var bodyParser = require('body-parser')
 var logger  = require('morgan')
 
-var Tweet = require('./app/db.js').Tweet
+var Tweet = require('./app_server/db.js').Tweet
 
 var app = express()
 
