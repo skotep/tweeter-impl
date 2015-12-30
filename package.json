@@ -2,10 +2,11 @@
   "name": "tweeter",
   "version": "1.0.0",
   "description": "Twitter Clone",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "watchify -t mithrilify app/*.js -o static/app-browserified.js -d -v"
+    "watch": "watchify -t mithrilify app/*.js -o static/app-browserified.js -d -v",
+    "start": "npm run watch & node server.js"
   },
   "author": "Scott Pollack",
   "license": "MIT",
@@ -14,7 +15,8 @@
     "express": "^4.13.3",
     "mongoose": "^4.3.4",
     "morgan": "^1.6.1",
-    "msx": "^0.4.1"
+    "msx": "^0.4.1",
+    "twit": "^2.1.1"
   },
   "devDependencies": {
     "mithril": "^0.2.1",
