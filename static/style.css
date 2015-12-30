@@ -1,0 +1,98 @@
+
+body { 
+	margin: 0 auto;
+	max-width: 600px;
+	background-color: #337ab7;	
+}
+
+.owl-icon {
+	margin-top: -3pt;
+	width: 32px;
+	height: 32px;
+	border-radius: 4px;
+	border: 1pt solid grey;
+	padding: 2pt;
+	background-color: white;
+}
+
+.blue-text {
+	color: #337ab7 !important;
+}
+
+.pull-right {
+	margin-top: 10px;
+	margin-right: 2px;
+}
+
+.pull-right2 {
+	margin-top: 10px;
+	margin-right: 10px;
+}
+
+.login-field {
+	height: 32px;
+	border: 1px solid #e1e8ed;
+	border-radius: 21px;
+	padding: 5px 27px 6px 12px;	
+}
+
+.welcome {
+	border: none;	
+	text-align: right;
+}
+
+.noTweet {
+	width: 100%;
+	text-align: center;
+	color: #337ab7;
+	font-style: italic;
+	font-size: 1.5em;
+	margin: 5px;
+}
+
+.tweet {	
+	margin: 0 auto;
+	width: 75%;
+	padding-bottom: 22px;
+}
+
+.tweetbox {	
+	margin-bottom: 1.5pt;
+	padding: 3pt;
+	border: 1pt solid grey;	
+	border-radius: 10px;
+	min-height: 3.5em;	
+}
+
+.tweetLength {
+	font-style: italic; 
+	font-size: 0.8em;
+}
+
+.tweetBtn {		
+	float: right;
+}
+
+.tweetRed {
+	color: red;
+}
+
+.feed {
+	border: 1pt solid grey;
+	margin: 5pt;
+	border-radius: 4pt;
+	padding: 5px 18px 5px 18px;
+	background-color: white;
+}
+
+.author {
+	font-weight: bold;
+	font-style: italic;
+	font-size: 1em;
+}
+
+.timestamp {	
+	font-style: italic;
+	font-size: 0.8em;
+	float: right;
+}

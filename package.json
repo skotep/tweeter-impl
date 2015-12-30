@@ -1,0 +1,24 @@
+{
+  "name": "tweeter",
+  "version": "1.0.0",
+  "description": "Twitter Clone",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "watchify -t mithrilify app/*.js -o static/app-browserified.js -d -v"
+  },
+  "author": "Scott Pollack",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "express": "^4.13.3",
+    "mithril": "^0.2.1",
+    "mongoose": "^4.3.4",
+    "morgan": "^1.6.1",
+    "msx": "^0.4.1"
+  },
+  "devDependencies": {
+    "dotenv": "^1.2.0",
+    "mithrilify": "0.0.6"
+  }
+}
