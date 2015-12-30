@@ -2,7 +2,7 @@
 body { 
 	margin: 0 auto;
 	max-width: 600px;
-	background-color: #337ab7;	
+	background-color: #014181;	
 }
 
 .owl-icon {
@@ -16,7 +16,7 @@ body {
 }
 
 .blue-text {
-	color: #337ab7 !important;
+	color: #014181 !important;
 }
 
 .pull-right {
@@ -44,7 +44,7 @@ body {
 .noTweet {
 	width: 100%;
 	text-align: center;
-	color: #337ab7;
+	color: #014181;
 	font-style: italic;
 	font-size: 1.5em;
 	margin: 5px;
@@ -86,7 +86,7 @@ body {
 }
 
 .author {
-	color: #337ab7;	
+	color: #014181;	
 	font-weight: bold;
 	font-style: italic;
 	font-size: 1em;
