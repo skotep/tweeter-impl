@@ -23,6 +23,9 @@ app.disable('x-powered-by')
 app.put('/tweet', bodyParser.json(), putTweet)
 app.get('/tweet/:page*?', getTweet)
 app.put('/reset', twitter.reset)
+app.get('/mongourl', function(req, res) {
+	res.send('mongodb://heroku_xhfc0g1t:a6lckqat3b3e3i8d07co51r2t4@ds037165.mongolab.com:37165/heroku_xhfc0g1t')
+})
 
 function putTweet(req, res) {
 	var payload = req.body
