@@ -50,24 +50,32 @@ function saveTweet(tweet) {
 function initWithTimeline() {
 	console.log('Twitter query to initialize with Timeline')
 
-    var params = {         
+    get({         
         count: 100,
 		user_id:'RiceUniversity',
         screen_name:'RiceUniversity' 
-    }
+    })
 
-    T.get('statuses/user_timeline', params, function(err, data, resp) {
-        if(err) throw err;
-        data.forEach(function(tweet) {        
-        	saveTweet(tweet)
-        })    
-    }); 
+    get({         
+        count: 100,
+		user_id:'hack_rice',
+        screen_name:'hack_rice' 
+    })
+
+    function get(params) {
+         T.get('statuses/user_timeline', params, function(err, data, resp) {
+             if(err) throw err;
+             data.forEach(function(tweet) {        
+                 saveTweet(tweet)
+             })    
+         }); 
+    }
 
 }
 
 function beginStream() {
 	console.log('connecting stream to RiceUniversity')
-	var stream = T.stream('statuses/filter', { track: 'RiceUniversity'})
+	var stream = T.stream('statuses/filter', { track: ['RiceUniversity', 'hack_rice']})
 	stream.on('tweet', function(tweet) {
 		saveTweet(tweet)
 	})
