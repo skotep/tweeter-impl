@@ -75,7 +75,7 @@ function initWithTimeline() {
 
 function beginStream() {
 	console.log('connecting stream to RiceUniversity')
-	var stream = T.stream('statuses/filter', { track: ['RiceUniversity', 'hack_rice']})
+	var stream = T.stream('statuses/filter', { track: 'hack_rice,RiceUniversity'})
 	stream.on('tweet', function(tweet) {
 		saveTweet(tweet)
 	})
