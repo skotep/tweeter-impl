@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hack Rice Web Dev Workshop</title>
+	<meta charset="utf-8">
+	<meta content="width=device-width, initial-scale=1" name="viewport">
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">	
+    <link href="style.css" rel="stylesheet" type="text/css">        
+	<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+</head>
+<body onload="prettyPrint()" style="max-width: 760px">
+<a name=""></a>
+
+<h3 class="workshop" style="text-align: center">Hack Rice 2016<br/>Web Dev Workshop</h3>
+
+<aside>
+	<a class="nav-link" href="#"><u>Hack Rice 2016</u></a><br/>
+	<a class="nav-link" href="#A">A. Getting Started</a><br/>
+	<a class="nav-link" href="#B">B. Tweet Server</a><br/>
+	<a class="nav-link" href="#C">C. Server Testing</a><br/>
+	<a class="nav-link" href="#D">D. Front-End Ctrl</a><br/>
+	<a class="nav-link" href="#E">E. Front-End View</a><br/>
+	<a class="nav-link" href="#F">F. Next Steps</a><br/>
+</aside>
+
+<a name="A"></a>
+<section class="workshop">
+<h4>A. Getting Started</h4>
+	<ol>
+		<li>Install <a href="http://www.sublimetext.com/3">Sublime Text</a></li>
+		<li>Install <a href="https://nodejs.org">NodeJS</a></li>
+		<li><code>git clone https://github.com/skotep/tweeter.git hackRiceTweeter</code></li>
+		<li><code>cd hackRiceTweeter</code></li>
+		<li><code>npm install</code></li>
+		<li><code>npm start</code></li>
+		<li>Browse to <a href="http://localhost:8080">http://localhost:8080</a></li>
+	</ol>
+</section>
+
+<a name="B"></a>
+<section class="workshop">
+<h4>B. Tweet Server</h4>
+	<ol>
+		<li>In Sublime "File > Open Folder..." hackRiceTweeter</li>
+		<li>Add the following "hello world" endpoint to <em>server.js</em> (on line 11 for example):
+<pre class="pp prettyprint lang-javascript">
+app.get('/hello', function(req, res) {	
+	res.send('Hello World!')
+})
+</code></pre>
+		</li>
+		<li>Save the file, restart the server, go to <a href="http://localhost:8080/hello">http://localhost:8080/hello</a></li>
+	</ol>
+	<p>From now on whenever we make changes to our server code, we need to restart the server to pick up the changes.  (An automated approach is to use, e.g., <em>nodemon</em>.)</p>
+
+	<p>Our goal is to add the functions <code>getTweets()</code> and <code>putTweet()</code> -- we store Tweets in a database.  We'll
+	be using a shared MongoDB instance for this.  It is <em>shared</em> among all of us.  Later you can get your own instance for free.</p>
+	<ol start="4">
+		<li>Put the <a href="http://rice-tweeter.herokuapp.com/mongourl">shared mongoDB instance</a>
+		as the value on line 6 in <em>db.js</em></li>
+		<li>Uncomment line 6 in <em>server.js</em></li>
+		<li>To get one Tweet from the database try something like this:
+<pre class="pp prettyprint lang-javascript">
+Tweet.find().sort({ 
+	timestamp: -1 
+}).limit(1).exec(function(err, items) {
+	res.send({ 'tweets': items })
+})	
+</pre>
+		</li>
+	</ol>
+<p>Think about what this does...</p>
+	<ol start="7">
+		<li>To create a Tweet we want to use <code>app.put</code> instead of <code>app.get</code> and will have something like this in the body of the function:
+<pre class="pp prettyprint lang-javascript">
+new Tweet({ 
+	body: body, 
+	author: author, 
+	timestamp: new Date().getTime() 
+}).save(function(err, tweet) {
+	// send back to the caller the added Tweet
+	res.send(tweet)
+}
+</pre>
+		</li>
+		<li>We receive the body and author from the request.  It's placed in a member named <code>body</code>, the body of the request, not the body of the Tweet.
+<pre class="pp prettyprint lang-javascript">
+var payload = req.body
+var body    = payload.body
+var author  = payload.author
+
+// always helpful to add some extra logging messages:
+console.log('New Tweet with body=' + body + ' from author=' + author)
+</pre>
+		</li>
+	</ol>	
+<p>That should get us a working Tweet server that allows us to create
+new Tweets in the database and receive Tweets from the database, with some limit on the number of results returned...</p>
+</section>
+
+<a name="C"></a>
+<section class="workshop">
+<h4>C. Testing the Tweet Server</h4>
+
+<p>You get to define the endpoints (urls) of the get and put Tweet functions.  Next we want to test them out, for example to get the tweets I might go to 
+<a href="http://localhost:8080/tweet">http://localhost:8080/tweet</a> whereas to add a new Tweet we use a command line tool to test:
+<pre class="pp prettyprint lang-bash">
+curl -H 'Content-Type: application/json' -X PUT \
+  -d '{ "author":"Scott", "body":"This is a test" }' \
+  http://localhost:8080/tweet
+</pre>
+<p>We can use <code>curl</code> to GET the tweets too</p>
+<pre class="pp prettyprint lang-bash">
+curl http://localhost:8080/tweet
+</pre>
+<p>Notice that I'm using the <em>same</em> endpoint name but a different "method" a.k.a "verb" where in one we are performing a "GET" (<code>-X GET</code> is the default option for curl) in the other we are performing a "PUT" -- semantically these are correct to retrieve and add data respectively.</p>
+
+</section>
+
+<a name="D"></a>
+<section class="workshop">
+<h4>D. Front-End</h4>
+	<p>Now for magic!  The front end source lives in the <code>app</code> directory.  It is "transpiled" and collated into a single file that is placed in the <code>static</code> directory and served up by Node.</p>
+	<p>The front end is dynamic and we use a <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">Model-View-Controller</a> paradigm to help in <a href="https://en.wikipedia.org/wiki/Separation_of_concerns">separation of concerns</a> between different aspects of the application.
+ 	We'll use the <a href="http://mithril.js.org/">Mithril</a> framework
+	for this workshop because it's extremely fast and simple.</p>
+
+	<p>We need to create a Model (a single Tweet), a View (showing a Tweet on the page), and a Controller (which communicates with the server).
+	</p>
+
+	<p>We'll work on the Controller first.  Open <em>controller.js</em> you'll see that the variable <code>m</code> is in scope -- this is Mithril.  The Model (a Tweet) has been created for you.  It has three fields which are Mithril properties, user input read from the page.</p>
+	<p>The function <code>getController()</code> creates a JavaScript object which I refer to as <code>vm</code> (for view-model as in <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel">MVVM</a>).  We will want to add functions <code>getTweets</code> and <code>addTweet</code> 
+	to <code>vm</code>.</p>
+	<ol>
+		<li>To make an AJAX request to the server we write:
+<pre class="pp prettyprint lang-javascript">
+var response = m.prop({})
+m.request({ method: 'GET', url: '/tweet'})
+ .then(response).then(function() {
+ 	var r = response()
+ 	console.log(r) // look to see what this returns
+ 	// iterate over the returned tweets
+ 	// convert each into a Tweet instance
+ 	// add to our array:
+ 	//   vm.tweets.unshift(tweet) 	
+ })
+</pre>
+		</li>
+		<li>Test it out, perhaps like this
+<pre class="pp prettyprint lang-javascript">
+function getController() {
+	var vm = { ... }
+
+	function getTweets() { ... }
+
+	getTweets()
+
+	return vm
+}
+</pre>
+	look in the console to see the response.</li>
+	<li>The <code>addTweet</code> function is similar, but the request method is PUT instead of GET and we send a payload of data
+<pre class="pp prettyprint lang-javascript">
+// for right now we can hardcode the body and author values
+var newTweet = new Tweet({ 
+	body: "Tweet Tweet", author: "Owlet" 
+})
+m.request({ method: 'PUT', url: '/tweet', data: newTweet })
+ .then(response, error)
+ .then(function() {
+ 	var r = response()
+ 	console.log(r)
+ 	// add the new tweet to the array of tweets
+ })
+</pre>
+	again test the function.
+	</li>
+	</ol>
+</section>
+
+
+<a name="E"></a>
+<section class="workshop">
+<h4>E. Front-End View</h4>
+
+<p>Now we direct our attention to the view.  <em>view.js</em> is
+technically a jsx file, JavaScript syntax extension.  It has
+embedded HTML within it which transpiles to Mithril function calls that generate the document object model (DOM) of the web page.  To
+get syntax highlighting to work correctly in Sublime 
+you'll want to install the <a href="https://packagecontrol.io/packages/Babel">Babel package</a>.</p>
+<p>Let's get the Tweets displayed first, then the ability
+to add a new Tweet, and then we'll add in the author information
+(i.e., making sure the user logs in before tweeting).
+</p>
+<p>The <code>vm</code> has the member <code>tweets</code>
+which is an array.  We can iterate over each, and for each
+item we want to construct a "card".
+</p>
+<ol>
+	<li>The following will iterate over the array and provide
+	stylized cards:
+<pre class="pp prettyprint lang-javascript">
+{
+  vm.tweets.map(function(tweet, index) {       
+    return &lt;div class="feed"&gt;
+      &lt;span class="author"&gt;{ tweet.author() }&lt;/span&gt;
+      &lt;span class="timestamp"&gt;{ 
+        moment(tweet.timestamp()).fromNow() 
+      }&lt;/span&gt;
+      &lt;div&gt;{ tweet.body() }&lt;/div&gt;
+    &lt;/div&gt;
+  })
+}
+</pre>
+	put this between line 21 and line 22 for example.
+	</li>
+	<li>View the page now and see if it worked.  Check
+	the browser console for errors.</li>
+	<li>We can use variables to help control the complexity
+	of our HTML.  Here's what the box for a new Tweet looks like
+<pre class="pp prettyprint lang-javascript">
+var newTweet = &lt;div class="tweet"&gt;
+    &lt;div class="tweetbox" contenteditable="true"
+        oninput={ m.withAttr("innerText", vm.newTweetBody) } &gt;
+        { vm.newTweetBody() }
+    &lt;/div&gt;
+
+    &lt;div&gt;        
+        &lt;button class="btn btn-success tweetBtn" onclick={ function() { vm.addTweet() } }&gt;Tweet&lt;/button&gt;     
+    &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+	we can place this below line 16</li>
+	<li>We now have a navbar and a newTweet.  In the <code>return</code>
+	of the function, put the new tweet box after the navbar inside the &lt;nav&gt; tag.</li>
+	<li>The "body" of the new tweet is contained in <code>vm.newTweetBody</code> so we need to add that field in <em>controller.js</em>
+<pre class="pp prettyprint lang-javascript">
+var vm = {
+	tweets: [],
+	newTweetBody: m.prop(""),
+	addTweet: addTweet
+}
+</pre>
+	additionally we need the <code>addTweet</code> function available to
+	the view for the button to call it.
+	</li>
+	<li>How is it looking?  Test the functionality of the button.</li>
+	<li>Now we need to fix the addTweet function to get the newTweetBody value from the vm.</li>
+	<li>Next we need the author to be correct!</li>	
+</ol>
+
+<p>Simplistically we'll have a text box for the user to
+type in their username and then click a log in button.  
+The "new tweet" box will appear and the log in changes
+to a log out button.  We'll need some conditional logic in our view to get this done along with some more fields in the vm to maintain state.</p>
+
+<ol start="9">
+	<li>Here is what we want in the view model.  There will be
+	two new functions login and logout, a username, and a
+	boolean to easily determine if the user is logged in or not.
+<pre class="pp prettyprint lang-javascript">
+var vm = { 
+	tweets: []
+
+	, loggedIn: false
+	, username: m.prop("")
+
+	, newTweetBody: m.prop("")		
+	, addTweet: addTweet
+
+	, login: login
+	, logout: logout
+}
+
+function login() { }
+
+function logout() { }
+</pre>
+	We'll implement the functions below.</li>
+	<li>Now use these in the view:
+<pre class="pp prettyprint lang-javascript">
+&lt;div class="navbar-default pull-right"&gt;
+  {
+      vm.loggedIn ? 
+      &lt;input value={ 'Welcome ' + vm.username() + '!' }
+          class="navbar-default login-field welcome"
+          readonly /&gt; : 
+      &lt;input placeholder="username" 
+          class="navbar-default login-field"
+          oninput={ m.withAttr("value", vm.username) } /&gt;
+  }
+
+  &lt;button class="btn btn-primary"
+      onclick={ vm.loggedIn ? vm.logout : vm.login } &gt;
+      { vm.loggedIn ? 'logout' : ' login' } 
+  &lt;/button&gt;
+&lt;/div&gt;
+</pre>
+	This goes in the navbar, I put it after the "Tweeter" text (outside of the &lt;a&gt; tag).</li>
+	<li>To make the newTweet box dependent on the logged in state
+we write this:
+<pre class="pp prettyprint lang-javascript">
+{ 
+  vm.loggedIn ? newTweet : 
+    &lt;div class="noTweet"&gt;login to make a tweet!&lt;/div&gt; 
+}
+&lt;div class="alert alert-danger" style={ 
+  vm.error().length ? 'display: block' : 'display: none' }&gt;
+    { vm.error() }
+&lt;/div&gt;
+</pre>
+	</li>
+	<li>Now we implement the login and logout functions in <em>controller.js</em>
+<pre class="pp prettyprint lang-javascript">
+function login() {
+	vm.loggedIn = vm.username().length > 0;		
+	vm.newTweetBody("")
+}
+
+function logout() {
+	vm.loggedIn = false;
+	vm.username("")
+	vm.newTweetBody("")
+}
+</pre>
+	</li>
+	<li>The final piece of the puzzle is to have the page
+	auto-refresh.  The poor man's solution is to add
+	this to the controller code, I put it just before <code>return vm</code>
+<pre class="pp prettyprint lang-javascript">	
+function poll() {	
+	getTweets()
+	setTimeout(poll, 30000)
+}	
+poll()
+</pre>
+	which will poll the server twice a minute.</li>
+</ol>
+</section>
+
+
+<a name="F"></a>
+<section class="workshop">
+<h4>F. Next Steps</h4>
+
+<ul>
+<li>Get your Twitter clone hosted on the cloud
+and available to users!  I recommend Heroku due to their ease of use,
+pricing point (free), and feature selection: In one click
+you can add your own MongoDB instance as well as many other
+services such as Redis (memcache keyvalue store), Cloudinary (image processing and store), Buketeer (S3 interconnect), and many, many more.
+</li>
+<li>Add password authentication</li>
+<li>Add OAuth/2 authorization with Twitter, Facebook, Google, etc</li>
+<li>Change the static listing of Tweets to an infinite scroll 
+by implementing pagination</li>
+<li>The possibilities are endless!</li>
+</ul>
+
+</section>
+
+
+
+
+<div class="vspace">&nbsp;</div>
+
+</body>
+</html>

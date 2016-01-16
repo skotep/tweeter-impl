@@ -98,3 +98,39 @@ body {
 	font-size: 0.8em;
 	float: right;
 }
+
+code {
+	color: blue;
+}
+
+pre.prettyprint.pp {
+	padding: 3px 3px 3px 10px;
+	border: 0px;
+}
+
+aside {
+	background-color: white;
+	position: fixed;	
+	border-radius: 4pt;
+	border: 2px solid #014181;
+	padding: 5px 18px 5px 18px;
+	right: 3px;
+	bottom: 3px;	
+}
+
+.workshop {
+	border: 1pt solid grey;
+	margin: 5pt;
+	border-radius: 4pt;
+	padding: 5px 18px 5px 18px;
+	background-color: white;
+}
+
+.nav-link {
+	text-decoration: none;
+	color: black;
+}
+
+.vspace {
+	height: 50em;
+}
