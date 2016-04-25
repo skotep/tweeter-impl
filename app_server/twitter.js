@@ -51,13 +51,13 @@ function initWithTimeline() {
 	console.log('Twitter query to initialize with Timeline')
 
     get({         
-        count: 100,
+        count: 500,
 		user_id:'RiceUniversity',
         screen_name:'RiceUniversity' 
     })
 
     get({         
-        count: 100,
+        count: 500,
 		user_id:'hack_rice',
         screen_name:'hack_rice' 
     })
