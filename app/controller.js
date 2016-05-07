@@ -18,10 +18,10 @@ function getController() {
 		  tweets: []
 
 		, loggedIn: false
-		, username: m.prop("")
+		, username: m.prop('')
 
-		, newTweetBody: m.prop("")		
-		, error: m.prop("")
+		, newTweetBody: m.prop('')
+		, error: m.prop('')
 
 		, login: login
 		, logout: logout
@@ -33,19 +33,19 @@ function getController() {
 
 	function login() {
 		vm.loggedIn = vm.username().length > 0;
-		vm.error(vm.loggedIn ? "" : "please enter a username")
-		vm.newTweetBody("")
+		vm.error(vm.loggedIn ? '' : 'please enter a username')
+		vm.newTweetBody('')
 	}
 
 	function logout() {
 		vm.loggedIn = false;
-		vm.username("")
-		vm.error("")
-		vm.newTweetBody("")
+		vm.username('')
+		vm.error('')
+		vm.newTweetBody('')
 	}
 
 	function getTweets(vm) {
-		vm.error("")
+		vm.error('')
 		console.log('poll server...')
 
 		var response = m.prop({})
@@ -65,7 +65,7 @@ function getController() {
 	}
 
 	function addTweet(vm) {
-		vm.error("")
+		vm.error('')
 		var body = vm.newTweetBody()		
 		var author = vm.username()		
 		if (body) {
@@ -81,7 +81,7 @@ function getController() {
 					if (!e || !e.error) {
 						newTweet.timestamp(r.timestamp)
 						vm.tweets.unshift(newTweet)		
-						vm.newTweetBody("")
+						vm.newTweetBody('')
 					} else {	
 						vm.error(e.error ? e.error : e)
 						console.log('there was an error', e.error)

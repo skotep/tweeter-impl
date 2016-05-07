@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import { createStore } from 'redux'
 import Tweet from './tweet.jsx'
 import $ from 'jquery'
 
@@ -60,7 +61,7 @@ export default class TweetCtrl extends Component {
                 </a>
                 <div className="navbar-default pull-right">
                     <input placeholder="username" 
-                        className={ this.isLoggedIn() ? "navbar-default login-field welcome" : "navbar-default login-field"}
+                        className={ this.isLoggedIn() ? 'navbar-default login-field welcome' : 'navbar-default login-field'}
                         value={ this.state.newUsername }
                         readOnly={ this.isLoggedIn() }
                         onChange={this.handleUsername.bind(this)} />
@@ -77,7 +78,7 @@ export default class TweetCtrl extends Component {
                 <ContentEditable onChange={this.handleNewTweetBody.bind(this)} html=""/>
                 <div>
                     <span className={ this.state.newTweetBody.length > MAX_TWEET_LENGTH ?
-                                      "tweet tweetLength tweetRed" : "tweet tweetLength" }>
+                                      'tweet tweetLength tweetRed' : 'tweet tweetLength' }>
                         Your tweet is {this.state.newTweetBody.length} characters long                    
                     </span>
                     <button className="btn btn-success tweetBtn" onClick={this.addTweet.bind(this)}>Tweet</button>            
