@@ -7,7 +7,7 @@ import createLogger from 'redux-logger'
 import { createStore, applyMiddleware } from 'redux'
 
 import tweetReducer from './reducers.jsx'
-import App from './app.jsx'
+import App from './components/app.jsx'
 
 import { startPolling } from './actions.jsx'
 
