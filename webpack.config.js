@@ -1,7 +1,7 @@
 var path = require('path')
 
 module.exports = {
-    entry: "./src/main.jsx",
+    entry: "./src/index.jsx",
     output: { path: path.resolve(__dirname, 'static'), filename: "bundle.js" },
     watch: true,
     debug: true,
@@ -13,7 +13,7 @@ module.exports = {
             loader: 'babel-loader',
             include: path.resolve(__dirname, 'src'),
             query: {
-                presets: ['es2015', 'react']
+                presets: ['es2015', 'react', 'stage-2']
             }
         }]
     }
